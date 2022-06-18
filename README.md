@@ -5,11 +5,11 @@
 
 Fast and simple transform stream for excel files parsing
 
-# install
+# Install
 
 `npm i excel-row-stream`
 
-# usage
+# Usage
 
 Here is an example:
 
