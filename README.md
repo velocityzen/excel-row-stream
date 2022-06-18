@@ -48,7 +48,7 @@ The `workbookStream` will only return rows from matched sheets.
 
 ## Important
 
-All `row.values` have `unknown` type. Please always validate your data. For example you can do it with excelent [io-ts](https://github.com/gcanti/io-ts) library.
+All `row.values` have `unknown` type. Please always validate your data. For example, you can do it with the excellent [io-ts](https://github.com/gcanti/io-ts) library.
 
 License
 
