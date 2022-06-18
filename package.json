@@ -9,7 +9,7 @@
     "compile": "tsc --project tsconfig.json --noEmit",
     "compile:watch": "npm run compile -- --watch",
     "lint": "eslint .",
-    "release": "release-it",
+    "release": "npm run build && release-it",
     "test": "NODE_ENV=test jest --verbose",
     "test:coverage": "NODE_ENV=test jest --verbose --coverage",
     "test:watch": "NODE_ENV=test jest --verbose --watchAll"
