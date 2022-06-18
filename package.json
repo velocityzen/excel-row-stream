@@ -9,6 +9,7 @@
     "compile": "tsc --project tsconfig.json --noEmit",
     "compile:watch": "npm run compile -- --watch",
     "lint": "eslint .",
+    "release": "release-it",
     "test": "NODE_ENV=test jest --verbose",
     "test:coverage": "NODE_ENV=test jest --verbose --coverage",
     "test:watch": "NODE_ENV=test jest --verbose --watchAll"
@@ -52,6 +53,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
     "prettier": "^2.6.2",
+    "release-it": "^15.0.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.6",
     "rollup-plugin-node-externals": "^4.0.0",
