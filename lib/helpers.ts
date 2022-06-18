@@ -29,3 +29,16 @@ export async function asyncIterate<T>(
     await fn(el);
   }
 }
+
+export function getFormatId(strId?: string): null | number {
+  if (!strId) {
+    return null;
+  }
+
+  const id = parseInt(strId, 10);
+  if (isNaN(id)) {
+    return null;
+  }
+
+  return id;
+}

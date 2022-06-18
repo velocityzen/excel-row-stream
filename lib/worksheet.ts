@@ -1,6 +1,5 @@
 import { Readable } from "stream";
 import type { Entry } from "unzipper";
-import ssf from "ssf";
 
 import {
   Row,
@@ -15,6 +14,8 @@ import {
 } from "./types";
 
 import { parseXml } from "./xml";
+import { format } from "./format";
+import { getFormatId } from "./helpers";
 
 export function parseWorkSheet(
   entry: Entry,
@@ -109,38 +110,18 @@ function getCellValue(
       return cell.value;
   }
 
-  if (styles.hasFormatCodes) {
-    const formatId = parseInt(node.attributes.s, 10);
-    const fullFormatId = Number.isNaN(formatId)
-      ? 0
-      : styles.xfs[formatId].attributes.numFmtId;
+  const cellFormatId = getFormatId(node.attributes.s);
+  const formatId = cellFormatId
+    ? styles.xfs[cellFormatId].attributes.numFmtId
+    : 0;
 
-    if (fullFormatId !== undefined) {
-      const format = styles.formatCodes[fullFormatId];
-      if (format === undefined) {
-        try {
-          return ssf.format(Number(fullFormatId), Number(cell.value), {
-            date1904,
-          });
-        } catch (e) {
-          return "";
-        }
-      } else if (format !== "General") {
-        try {
-          return ssf.format(format, Number(cell.value), { date1904 });
-        } catch (e) {
-          return "";
-        }
-      }
-    }
-  } else {
-    const numValue = parseFloat(cell.value as string);
-    if (!isNaN(numValue)) {
-      return numValue;
-    }
-  }
-
-  return cell.value;
+  return format({
+    formatId,
+    hasFormatCodes: styles.hasFormatCodes,
+    formatCodes: styles.formatCodes,
+    date1904,
+    value: cell.value,
+  });
 }
 
 export function getSheetName(
