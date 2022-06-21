@@ -92,7 +92,7 @@ export default function createExcelWorkbookStream({
       if (isTempStream(workSheetStream)) {
         workSheetStream.sheet.cleanupCallback();
       } else {
-        workSheetStream.entry.autodrain();
+        await workSheetStream.entry.autodrain().promise();
       }
       return;
     }
@@ -163,7 +163,7 @@ export default function createExcelWorkbookStream({
               break;
 
             default:
-              entry.autodrain();
+              await entry.autodrain().promise();
           }
         })
         .catch((error: Error) => stream.destroy(error));
