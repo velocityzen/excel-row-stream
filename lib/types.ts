@@ -95,6 +95,6 @@ export type EntryParser = (entry: Entry) => Promise<EntryParserResult>;
 
 export interface WorkbookStreamOptions {
   matchSheet: RegExp;
-  dropEmptyRow?: boolean;
-  dropEmptyCell?: boolean;
+  dropEmptyRows?: boolean;
+  dropEmptyCells?: boolean;
 }

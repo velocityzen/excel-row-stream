@@ -5,7 +5,7 @@ describe("Excel parser stream", () => {
     parseExcelRows({
       file: "./tests/fixtures/date1904.xlsx",
       matchSheet: /.*/,
-      dropEmptyRow: true,
+      dropEmptyRows: true,
       onRow: (row) => {
         if (row.index === 2) {
           expect(row.values).toStrictEqual(["string", "27/09/1986", "20064"]);
@@ -81,7 +81,7 @@ describe("Excel parser stream", () => {
   test("parses a file with no number format ids", async () =>
     parseExcelRows({
       file: "./tests/fixtures/nonumfmt.xlsx",
-      dropEmptyRow: true,
+      dropEmptyRows: true,
       matchSheet: /.*/,
       onRow: (row) => {
         if (row.index === 2) {

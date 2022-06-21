@@ -74,8 +74,8 @@ async function handleEntry(entry: Entry): Promise<EntryParserResult> {
 
 export default function createExcelWorkbookStream({
   matchSheet,
-  dropEmptyRow,
-  dropEmptyCell,
+  dropEmptyRows,
+  dropEmptyCells,
 }: WorkbookStreamOptions) {
   let info: WorkBookInfo;
   let rels: WorkBookRels;
@@ -105,10 +105,10 @@ export default function createExcelWorkbookStream({
       styles,
       sharedStrings,
       onRow: (row) => {
-        if (dropEmptyRow && isEmpyRow(row)) {
+        if (dropEmptyRows && isEmpyRow(row)) {
           return;
         }
-        stream.push(dropEmptyCell ? dropEmptyValues(row) : row);
+        stream.push(dropEmptyCells ? dropEmptyValues(row) : row);
       },
     });
 

@@ -23,7 +23,7 @@ import createExcelWorkbookStream, { Row } from "excel-row-stream";
 const fileStream = createReadStream("./some.xlsx");
 const workbookStream = createExcelWorkbookStream({
     matchSheet: /sheet name/i,
-    dropEmptyRow: true,
+    dropEmptyRows: true,
 });
 const resultStream = new Writable({
     objectMode: true,
@@ -43,8 +43,8 @@ The `workbookStream` will only return rows from matched sheets.
 ## Options
 
 -   **matchSheet** (required) - RegExp, to match the sheet name
--   **dropEmptyRow** (optional) - Boolean, to drop empty rows, by default parser will emit all rows
--   **dropEmptyCell** (optional) - Boolean, to drop empty cells on the right side of the row
+-   **dropEmptyRows** (optional) - Boolean, to drop empty rows, by default parser will emit all rows
+-   **dropEmptyCells** (optional) - Boolean, to drop empty cells on the right side of the row
 
 ## Important
 
