@@ -1,6 +1,6 @@
 {
   "name": "excel-row-stream",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fast and simple transform stream for excel files parsing",
   "main": "buid/index.js",
   "types": "build/lib/index.d.ts",
