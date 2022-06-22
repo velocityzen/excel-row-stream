@@ -15,12 +15,19 @@ export function format({
   date1904,
   value,
 }: FormatOptions): unknown {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
   if (hasFormatCodes && formatId !== undefined) {
     const format = formatCodes[formatId];
 
     if (format !== undefined && format !== "General") {
       try {
-        return ssf.format(format, Number(value), { date1904 });
+        const num = Number(value);
+        if (!isNaN(num)) {
+          return ssf.format(format, Number(value), { date1904 });
+        }
       } catch (e) {
         // DO NOTHING
       }
@@ -29,9 +36,12 @@ export function format({
 
   if (formatId) {
     try {
-      return ssf.format(Number(formatId), Number(value), {
-        date1904,
-      });
+      const num = Number(value);
+      if (!isNaN(num)) {
+        return ssf.format(Number(formatId), Number(value), {
+          date1904,
+        });
+      }
     } catch (e) {
       // DO NOTHING
     }
