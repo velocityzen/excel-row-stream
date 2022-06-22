@@ -1,7 +1,7 @@
 import { reduceRight } from "fp-ts/Array";
-import { Row } from "./types";
+import { RowWithValues } from "./types";
 
-export function isEmpyRow(row: Row): boolean {
+export function isEmpyRow(row: RowWithValues): boolean {
   return row.values.every((v) => v === undefined || v === null);
 }
 
@@ -14,7 +14,10 @@ const dropEmpty = reduceRight([], (v, arr: unknown[]) => {
   return arr;
 });
 
-export function dropEmptyValues({ index, values }: Row): Row {
+export function dropEmptyValues({
+  index,
+  values,
+}: RowWithValues): RowWithValues {
   return {
     index,
     values: dropEmpty(values),

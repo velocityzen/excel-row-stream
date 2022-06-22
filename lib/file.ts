@@ -3,11 +3,11 @@ import { Writable } from "stream";
 import { pipeline } from "stream/promises";
 
 import createExcelWorkbookStream from "./workbook";
-import type { WorkbookStreamOptions, Row } from "./types";
+import type { WorkbookStreamOptions, RowWithValues } from "./types";
 
 interface ParseExcelRowsOptions extends WorkbookStreamOptions {
   file: string;
-  onRow: (row: Row) => void;
+  onRow: (row: RowWithValues) => void;
 }
 
 export async function parseExcelRows({
@@ -17,9 +17,9 @@ export async function parseExcelRows({
 }: ParseExcelRowsOptions): Promise<void> {
   const fileStream = createReadStream(file);
   const parserStream = createExcelWorkbookStream(opts);
-  const testStream = new Writable({
+  const resultStream = new Writable({
     objectMode: true,
-    write(row: Row, _encoding, callback) {
+    write(row: RowWithValues, _encoding, callback) {
       try {
         onRow(row);
         callback();
@@ -29,5 +29,5 @@ export async function parseExcelRows({
     },
   });
 
-  await pipeline(fileStream, parserStream, testStream);
+  await pipeline(fileStream, parserStream, resultStream);
 }

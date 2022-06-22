@@ -2,7 +2,7 @@ import { Readable } from "stream";
 import type { Entry } from "unzipper";
 
 import {
-  Row,
+  RowWithValues,
   Cell,
   XmlNode,
   EntryType,
@@ -36,7 +36,7 @@ interface ParseWorkSheetRowsOptions {
   info: WorkBookInfo;
   styles: WorkBookStyles;
   sharedStrings: WorkBookSharedStrings;
-  onRow: (row: Row) => void;
+  onRow: (row: RowWithValues) => void;
 }
 
 export async function parseWorkSheetRows({
@@ -106,6 +106,7 @@ function getCellValue(
       const index = parseInt(cell.value as string, 10);
       return sharedStrings[index] ?? "";
 
+    case "str": // just string
     case "inlineStr": // inline string
       return cell.value;
   }

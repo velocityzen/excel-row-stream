@@ -6,10 +6,17 @@ export type XmlNode = {
   attributes: Record<string, string>;
 };
 
-export type Row = {
+export type RowWithValues = {
   index: number;
   values: unknown[];
 };
+
+export type RowWithColumns = {
+  index: number;
+  columns: Record<string, unknown>;
+};
+
+export type RowAsObject = Record<string, unknown>;
 
 export type Cell = {
   id: string;

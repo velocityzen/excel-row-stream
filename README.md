@@ -3,7 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/excel-row-stream.svg?style=flat-square)](https://www.npmjs.com/package/excel-row-stream)
 [![NPM Downloads](https://img.shields.io/npm/dt/excel-row-stream.svg?style=flat-square)](https://www.npmjs.com/package/excel-row-stream)
 
-Fast and simple transform stream for excel files parsing
+Fast and simple transform stream for excel file parsing
 
 # Install
 
@@ -49,6 +49,91 @@ The `workbookStream` will only return rows from matched sheets.
 ## Important
 
 All `row.values` have `unknown` type. Please always validate your data. For example, you can do it with the excellent [io-ts](https://github.com/gcanti/io-ts) library.
+
+## Compose
+
+This library also provides several streams that can make your life easier
+
+### createRowToRowWithColumnsStream({sanitizeColumnName})
+
+Creates a stream that converts rows with values into objects with column names. The column names come from the first row (index = 1).
+
+Options:
+– **sanitizeColumnName** optional function to transform column names.
+
+```typescript
+const fileStream = createReadStream("file.xlsx");
+const parserStream = createExcelParserStream({
+    matchSheet: /.*/,
+    dropEmptyRows: true,
+});
+
+const withColumnsStream = createRowToRowWithColumnsStream({
+    sanitizeColumnName: (columnName) =>
+        columnName.toLowerCase().replace(/\W/g, "_"),
+});
+
+const resultStream = new Writable({
+    objectMode: true,
+    write(row: RowWithColumns, _encoding, callback) {
+        console.log(row.index, row.columns);
+        callback();
+    },
+});
+
+await pipeline(fileStream, parserStream, withColumnsStream, resultStream);
+```
+
+### createRowToRowAsObjectStream()
+
+Creates a stream that strips the `index` from rows and returns the data directly, either `values` or `columns`.
+
+```typescript
+const fileStream = createReadStream("file.xlsx");
+const parserStream = createExcelParserStream({
+    matchSheet: /.*/,
+    dropEmptyRows: true,
+});
+
+const asObjectsStream = createRowToRowAsObjectStream();
+
+const resultStream = new Writable({
+    objectMode: true,
+    write(row: unknown[], _encoding, callback) {
+        console.log("values", row);
+        callback();
+    },
+});
+
+await pipeline(fileStream, parserStream, asObjectsStream, resultStream);
+```
+
+### createThrowIfEmptyStream({message})
+
+Creates a stream that checks if no data flows through it and throws an error with `message`.
+
+```typescript
+const fileStream = createReadStream("file.xlsx");
+const parserStream = createExcelParserStream({
+    matchSheet: /.*/,
+    dropEmptyRows: true,
+});
+
+const filterStream = new Transform({
+    objectMode: true,
+    write(row: RowWithValues, _encoding, callback) {
+        // skip all the data
+        callback();
+    },
+});
+
+const throwIfError = createThrowIfEmptyStream({
+    message: "Can not believe it",
+});
+
+// will throw
+await pipeline(fileStream, parserStream, filterStream, throwIfError);
+```
 
 License
 
