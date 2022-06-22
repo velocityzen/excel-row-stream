@@ -5,14 +5,15 @@ export function isEmpyRow(row: RowWithValues): boolean {
   return row.values.every((v) => v === undefined || v === null);
 }
 
-const dropEmpty = reduceRight([], (v, arr: unknown[]) => {
-  if (arr.length === 0 && (v === undefined || v === null)) {
-    return arr;
-  }
+export const dropEmpty = (arr: unknown[]) =>
+  reduceRight([], (v, arr: unknown[]) => {
+    if (arr.length === 0 && (v === undefined || v === null)) {
+      return arr;
+    }
 
-  arr.unshift(v);
-  return arr;
-});
+    arr.unshift(v);
+    return arr;
+  })(arr);
 
 export function dropEmptyValues({
   index,
@@ -44,4 +45,16 @@ export function getFormatId(strId?: string): null | number {
   }
 
   return id;
+}
+
+export function getColumnNumber(columnName: string): number {
+  let i = columnName.search(/\d/);
+  let colNum = 0;
+
+  columnName.replace(/\D/g, function (letter) {
+    colNum += (parseInt(letter, 36) - 9) * Math.pow(26, --i);
+    return "";
+  });
+
+  return colNum;
 }

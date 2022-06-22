@@ -15,7 +15,7 @@ import {
 
 import { parseXml } from "./xml";
 import { format } from "./format";
-import { getFormatId } from "./helpers";
+import { getFormatId, getColumnNumber } from "./helpers";
 
 export function parseWorkSheet(
   entry: Entry,
@@ -68,6 +68,13 @@ export async function parseWorkSheetRows({
 
       case "c": // cell
         currentCell.id = node.attributes.r;
+        // eslint-disable-next-line no-case-declarations
+        const columnNumber = getColumnNumber(node.attributes.r);
+        // add null value for skipped cells
+        if (row.length + 1 < columnNumber) {
+          row.push(null);
+        }
+
         // eslint-disable-next-line no-case-declarations
         const value = getCellValue(
           currentCell,
