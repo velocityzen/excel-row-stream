@@ -8,7 +8,7 @@ describe("Excel parser stream", () => {
       dropEmptyRows: true,
       onRow: (row) => {
         if (row.index === 2) {
-          expect(row.values).toStrictEqual(["string", "27/09/1986", "20064"]);
+          expect(row.values).toStrictEqual(["string", "27/09/1986", 20064]);
         }
       },
     }));
@@ -37,10 +37,10 @@ describe("Excel parser stream", () => {
             "doe",
             "maschio",
             "9/27/86",
-            "1111111111",
+            1111111111,
             "test@gmail.com",
             "milano",
-            "20064",
+            20064,
             "gorgonzola",
             "italia",
           ]);
@@ -93,7 +93,7 @@ describe("Excel parser stream", () => {
             "mario",
             "MI",
             "M",
-            20131,
+            "20131",
           ]);
         }
       },
@@ -104,7 +104,7 @@ describe("Excel parser stream", () => {
       file: "./tests/fixtures/richtext.xlsx",
       matchSheet: /.*/,
       onRow: (row) => {
-        expect(row.values).toStrictEqual(["B cell", "C cell"]);
+        expect(row.values).toStrictEqual([null, "B cell", "C cell"]);
       },
     }));
 
@@ -139,6 +139,21 @@ describe("Excel parser stream", () => {
       onRow: (row) => {
         if (row.index === 2) {
           expect(row.values).toStrictEqual([0, 1]);
+        }
+      },
+    }));
+
+  test("Ensure empty cell are nulls", async () =>
+    parseExcelRows({
+      file: "./tests/fixtures/empty_cell_order.xlsx",
+      matchSheet: /.*/,
+      onRow: (row) => {
+        if (row.index === 3) {
+          expect(row.values[0]).toStrictEqual(null);
+          expect(row.values[1]).toStrictEqual(null);
+          expect(row.values[2]).toStrictEqual(null);
+          expect(row.values[3]).toStrictEqual(null);
+          expect(row.values[4]).toStrictEqual("95");
         }
       },
     }));

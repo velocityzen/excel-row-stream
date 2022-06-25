@@ -34,11 +34,13 @@ export function format({
     }
   }
 
-  if (formatId) {
+  const formatIdNum = Number(formatId);
+  // we ignore default format 0 because it formats number as string.
+  if (formatIdNum) {
     try {
       const num = Number(value);
       if (!isNaN(num)) {
-        return ssf.format(Number(formatId), Number(value), {
+        return ssf.format(formatIdNum, num, {
           date1904,
         });
       }

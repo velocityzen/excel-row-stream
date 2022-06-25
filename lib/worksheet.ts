@@ -15,7 +15,7 @@ import {
 
 import { parseXml } from "./xml";
 import { format } from "./format";
-import { getFormatId, getColumnNumber } from "./helpers";
+import { getFormatId, getColumnIndex, safeInsertAt } from "./helpers";
 
 export function parseWorkSheet(
   entry: Entry,
@@ -69,11 +69,7 @@ export async function parseWorkSheetRows({
       case "c": // cell
         currentCell.id = node.attributes.r;
         // eslint-disable-next-line no-case-declarations
-        const columnNumber = getColumnNumber(node.attributes.r);
-        // add null value for skipped cells
-        if (row.length + 1 < columnNumber) {
-          row.push(null);
-        }
+        const columnIndex = getColumnIndex(node.attributes.r);
 
         // eslint-disable-next-line no-case-declarations
         const value = getCellValue(
@@ -83,7 +79,8 @@ export async function parseWorkSheetRows({
           sharedStrings,
           info.date1904
         );
-        row.push(value);
+        // keep row values array zero based
+        safeInsertAt(columnIndex - 1, value, row);
         currentCell = {} as Cell;
         break;
 

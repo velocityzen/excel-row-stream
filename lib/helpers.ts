@@ -47,7 +47,7 @@ export function getFormatId(strId?: string): null | number {
   return id;
 }
 
-export function getColumnNumber(columnName: string): number {
+export function getColumnIndex(columnName: string): number {
   let i = columnName.search(/\d/);
   let colNum = 0;
 
@@ -57,4 +57,18 @@ export function getColumnNumber(columnName: string): number {
   });
 
   return colNum;
+}
+
+export function safeInsertAt<V>(
+  index: number,
+  value: V,
+  arr: Array<null | V>
+): Array<null | V> {
+  for (let i = 0; i < index; i++) {
+    if (arr[i] === undefined) {
+      arr[i] = null;
+    }
+  }
+  arr[index] = value;
+  return arr;
 }
