@@ -64,7 +64,7 @@ export function safeInsertAt<V>(
   value: V,
   arr: Array<null | V>
 ): Array<null | V> {
-  for (let i = 0; i < index; i++) {
+  for (let i = arr.length; i < index; i++) {
     if (arr[i] === undefined) {
       arr[i] = null;
     }
