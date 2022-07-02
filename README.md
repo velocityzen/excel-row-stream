@@ -127,12 +127,12 @@ const filterStream = new Transform({
     },
 });
 
-const throwIfError = createThrowIfEmptyStream({
+const throwIfEmpty = createThrowIfEmptyStream({
     message: "Can not believe it",
 });
 
 // will throw
-await pipeline(fileStream, parserStream, filterStream, throwIfError);
+await pipeline(fileStream, parserStream, filterStream, throwIfEmpty);
 ```
 
 License
