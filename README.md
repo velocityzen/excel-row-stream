@@ -52,7 +52,7 @@ All `row.values` have `unknown` type. Please always validate your data. For exam
 
 ## Compose
 
-This library also provides several streams that can make your life easier
+This library provides several streams to make your life easier
 
 ### createRowToRowWithColumnsStream({sanitizeColumnName})
 
