@@ -82,17 +82,18 @@ export default function createExcelWorkbookStream({
   let styles: WorkBookStyles;
   let sharedStrings: WorkBookSharedStrings;
 
+  let isProcessingSheet = false;
+  let isFinished = false;
   // worksheets, deferred for parsing after all meta is parsed
   const deferredSheets: DeferredWorkSheet[] = [];
 
   async function streamWorkSheet(workSheetStream: WorkSheetStream) {
     const sheetName = getSheetName(info, rels, workSheetStream.sheet.path);
-
     if (!matchSheet.test(sheetName)) {
       if (isTempStream(workSheetStream)) {
         workSheetStream.sheet.cleanupCallback();
       } else {
-        await workSheetStream.entry.autodrain().promise();
+        workSheetStream.entry.autodrain();
       }
       return;
     }
@@ -117,20 +118,29 @@ export default function createExcelWorkbookStream({
     }
   }
 
+  function finish() {
+    if (deferredSheets.length > 0) {
+      asyncIterate(deferredSheets, (deferredSheet) =>
+        streamWorkSheet({ sheet: deferredSheet })
+      )
+        .then(() => stream.push(null))
+        .catch((error: Error) => stream.destroy(error));
+
+      return;
+    }
+
+    stream.push(null);
+  }
+
   const unzipStream = unzipper
     .Parse()
     .on("error", (error) => stream.destroy(error))
     .on("finish", () => {
-      if (deferredSheets.length > 0) {
-        asyncIterate(deferredSheets, (deferredSheet) =>
-          streamWorkSheet({ sheet: deferredSheet })
-        )
-          .then(() => stream.push(null))
-          .catch((error: Error) => stream.destroy(error));
-        return;
-      }
+      isFinished = true;
 
-      stream.push(null);
+      if (!isProcessingSheet) {
+        finish();
+      }
     })
     .on("entry", (entry: Entry) => {
       handleEntry(entry)
@@ -153,17 +163,24 @@ export default function createExcelWorkbookStream({
               break;
 
             case EntryType.Sheet:
+              isProcessingSheet = true;
+
               if (!info || !rels || !styles || !sharedStrings) {
                 const deferredSheet = await deferSheet(entry, result.value);
                 deferredSheets.push(deferredSheet);
-                return;
+              } else {
+                await streamWorkSheet({ sheet: result.value, entry });
               }
 
-              await streamWorkSheet({ sheet: result.value, entry });
+              isProcessingSheet = false;
               break;
 
             default:
-              await entry.autodrain().promise();
+              entry.autodrain();
+          }
+
+          if (isFinished) {
+            finish();
           }
         })
         .catch((error: Error) => stream.destroy(error));
