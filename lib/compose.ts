@@ -63,10 +63,12 @@ export function createThrowIfEmptyStream({
 
   return new Transform({
     objectMode: true,
+
     transform(row, _encoding, callback) {
       hasData ||= true;
       callback(null, row);
     },
+
     flush(callback) {
       const error = hasData ? null : new Error(message);
       callback(error);

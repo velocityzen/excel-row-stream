@@ -10,7 +10,7 @@
     "compile": "tsc --project tsconfig.json --noEmit",
     "compile:watch": "npm run compile -- --watch",
     "lint": "eslint .",
-    "release": "npm run test && npm run build && release-it",
+    "release": "npm run test && npm run lint && npm run build && release-it",
     "test": "NODE_ENV=test jest --verbose",
     "test:coverage": "NODE_ENV=test jest --verbose --coverage",
     "test:watch": "NODE_ENV=test jest --verbose --watchAll"
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/velocityzen/excel-row-stream#readme",
   "dependencies": {
-    "fp-ts": "^2.12.1",
+    "fp-ts": "^2.12.2",
     "htmlparser2": "^8.0.1",
     "ssf": "^0.11.2",
     "tmp": "^0.2.1",
