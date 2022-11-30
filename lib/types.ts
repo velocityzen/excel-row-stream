@@ -102,6 +102,7 @@ export type EntryParser = (entry: Entry) => Promise<EntryParserResult>;
 
 export interface WorkbookStreamOptions {
   matchSheet: RegExp;
+  alwaysAddSecondsToCustomTimeFormat?: boolean;
   dropEmptyRows?: boolean;
   dropEmptyCells?: boolean;
 }

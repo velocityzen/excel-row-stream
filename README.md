@@ -45,6 +45,7 @@ The `workbookStream` will only return rows from matched sheets.
 -   **matchSheet** (required) - RegExp, to match the sheet name
 -   **dropEmptyRows** (optional) - Boolean, to drop empty rows, by default parser will emit all rows
 -   **dropEmptyCells** (optional) - Boolean, to drop empty cells on the right side of the row
+-   **alwaysAddSecondsToCustomTimeFormat** (optional) - Boolean, always provide seconds for custom time format. Handles the common scenario where dates are formatted to display in hh:mm format (without seconds) in excel but the underlying data has more resolution. Defaults to TRUE, because this library is intended for data analysis, not replicating what the user saw in Excel. Also because this is what pandas would do. \*This is only applied to when the time field has a format type of CUSTOM\* . Which is what Excel automatically applies when it infers a field is a time field.
 
 ## Important
 

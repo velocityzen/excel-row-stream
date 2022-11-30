@@ -26,7 +26,7 @@ import {
   getSheetStream,
   WorkSheetStream,
 } from "./deferred";
-import { isEmpyRow, dropEmptyValues, asyncIterate } from "./helpers";
+import { isEmpyRow, dropEmptyValues, asyncIterate, fixStyles } from "./helpers";
 
 const entryMatch: Map<RegExp, EntryType> = new Map([
   [/^xl\/workbook\.xml/, EntryType.Info],
@@ -76,6 +76,7 @@ export default function createExcelWorkbookStream({
   matchSheet,
   dropEmptyRows,
   dropEmptyCells,
+  alwaysAddSecondsToCustomTimeFormat,
 }: WorkbookStreamOptions) {
   let info: WorkBookInfo;
   let rels: WorkBookRels;
@@ -155,7 +156,10 @@ export default function createExcelWorkbookStream({
               break;
 
             case EntryType.Styles:
-              styles = result.value;
+              styles = fixStyles(result.value, {
+                addSecondsToCustomTimeFormat:
+                  alwaysAddSecondsToCustomTimeFormat ?? true,
+              });
               break;
 
             case EntryType.SharedStrings:

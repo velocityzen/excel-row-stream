@@ -157,4 +157,29 @@ describe("Excel parser stream", () => {
         }
       },
     }));
+
+  test("adds seconds to custom time format", async () =>
+    parseExcelRows({
+      file: "./tests/fixtures/add_seconds.xlsx",
+      matchSheet: /.*/,
+      onRow: (row) => {
+        if (row.index === 1) {
+          expect(row.values[0]).toEqual("03/28/2022 12:00:00 AM");
+          expect(row.values[1]).toEqual("03/26/2023 11:59:59 PM");
+        }
+      },
+    }));
+
+  test("do not adds seconds to custom time format", async () =>
+    parseExcelRows({
+      file: "./tests/fixtures/add_seconds.xlsx",
+      matchSheet: /.*/,
+      alwaysAddSecondsToCustomTimeFormat: false,
+      onRow: (row) => {
+        if (row.index === 1) {
+          expect(row.values[0]).toEqual("03/28/2022 12:00 AM");
+          expect(row.values[1]).toEqual("03/26/2023 11:59 PM");
+        }
+      },
+    }));
 });

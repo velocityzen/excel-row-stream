@@ -1,5 +1,25 @@
 import { reduceRight } from "fp-ts/Array";
-import { RowWithValues } from "./types";
+import { WorkBookStyles, RowWithValues } from "./types";
+
+interface FixStylesOptions {
+  addSecondsToCustomTimeFormat: boolean;
+}
+
+export function fixStyles(
+  styles: WorkBookStyles,
+  { addSecondsToCustomTimeFormat }: FixStylesOptions
+): WorkBookStyles {
+  if (addSecondsToCustomTimeFormat && styles.hasFormatCodes) {
+    styles.formatCodes = Object.entries(styles.formatCodes).reduce<
+      Record<string, string>
+    >((map, [id, value]) => {
+      map[id] = value.replace(/h{1,2}:m{1,2}(:s{1,2})?/, "hh:mm:ss");
+      return map;
+    }, {});
+  }
+
+  return styles;
+}
 
 export function isEmpyRow(row: RowWithValues): boolean {
   return row.values.every((v) => v === undefined || v === null);
