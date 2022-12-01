@@ -122,7 +122,7 @@ const parserStream = createExcelParserStream({
 
 const filterStream = new Transform({
     objectMode: true,
-    write(row: RowWithValues, _encoding, callback) {
+    transform(row: RowWithValues, _encoding, callback) {
         // skip all the data
         callback();
     },
