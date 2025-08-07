@@ -20,7 +20,7 @@ import { getFormatId, getColumnIndex, safeInsertAt } from "./helpers";
 export function parseWorkSheet(
   entry: Entry,
   path: string,
-  number: string
+  number: string,
 ): Promise<EntryParserResultSheet> {
   return Promise.resolve({
     type: EntryType.Sheet,
@@ -77,7 +77,7 @@ export async function parseWorkSheetRows({
           node,
           styles,
           sharedStrings,
-          info.date1904
+          info.date1904,
         );
         // keep row values array zero based
         safeInsertAt(columnIndex - 1, value, row);
@@ -102,7 +102,7 @@ function getCellValue(
   node: XmlNode,
   styles: WorkBookStyles,
   sharedStrings: WorkBookSharedStrings,
-  date1904: boolean
+  date1904: boolean,
 ): unknown {
   switch (node.attributes.t) {
     case "s": // shared string
@@ -132,7 +132,7 @@ function getCellValue(
 export function getSheetName(
   info: WorkBookInfo,
   rels: WorkBookRels,
-  path: string
+  path: string,
 ): string {
   return info.sheetRelationshipsNames[rels.sheetRelationships[path]];
 }

@@ -3,7 +3,7 @@ import ssf from "ssf";
 interface FormatOptions {
   formatId: undefined | number | string;
   hasFormatCodes: boolean;
-  formatCodes: Record<string, string>;
+  formatCodes: Record<string, string | undefined>;
   date1904: boolean;
   value: unknown;
 }
@@ -28,6 +28,7 @@ export function format({
         if (!isNaN(num)) {
           return ssf.format(format, Number(value), { date1904 });
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // DO NOTHING
       }
@@ -44,6 +45,7 @@ export function format({
           date1904,
         });
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       // DO NOTHING
     }

@@ -1,28 +1,28 @@
 import type { Entry } from "unzipper";
 
-export type XmlNode = {
+export interface XmlNode {
   name: string;
   text: string;
   attributes: Record<string, string>;
-};
+}
 
-export type RowWithValues = {
+export interface RowWithValues {
   index: number;
   values: unknown[];
-};
+}
 
-export type RowWithColumns = {
+export interface RowWithColumns {
   index: number;
   columns: Record<string, unknown>;
-};
+}
 
 export type RowAsObject = Record<string, unknown>;
 
-export type Cell = {
+export interface Cell {
   id: string;
   value: unknown;
   formula: boolean;
-};
+}
 
 export enum EntryType {
   Info = "info",
@@ -32,31 +32,31 @@ export enum EntryType {
   Sheet = "sheet",
 }
 
-export type WorkBookInfo = {
+export interface WorkBookInfo {
   sheetRelationshipsNames: Record<string, string>;
   date1904: boolean;
-};
+}
 
 export interface EntryParserResultInfo {
   type: EntryType.Info;
   value: WorkBookInfo;
 }
 
-export type WorkBookRels = {
+export interface WorkBookRels {
   sheetRelationships: Record<string, string>;
-};
+}
 
 export interface EntryParserResultRels {
   type: EntryType.Rels;
   value: WorkBookRels;
 }
 
-export type WorkBookStyles = {
+export interface WorkBookStyles {
   hasFormatCodes: boolean;
   formatCodes: Record<string, string>;
   workBookStyles: XmlNode[];
   xfs: XmlNode[];
-};
+}
 
 export interface EntryParserResultStyles {
   type: EntryType.Styles;
@@ -70,10 +70,10 @@ export interface EntryParserResultSharedStrings {
   value: WorkBookSharedStrings;
 }
 
-export type WorkSheet = {
+export interface WorkSheet {
   id: number;
   path: string;
-};
+}
 
 export type DeferredWorkSheet = WorkSheet & {
   tmpFilePath: string;

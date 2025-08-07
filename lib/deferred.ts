@@ -7,35 +7,36 @@ import { WorkSheet, DeferredWorkSheet } from "./types";
 
 export async function deferSheet(
   entry: Entry,
-  value: WorkSheet
+  value: WorkSheet,
 ): Promise<DeferredWorkSheet> {
   return new Promise((resolve, reject) => {
     tmp.file((err, tmpFilePath, _fd, cleanupCallback) => {
       if (err) {
-        return reject(err);
+        reject(err);
+        return;
       }
 
       pipeline(entry, fs.createWriteStream(tmpFilePath))
-        .then(() =>
+        .then(() => {
           resolve({
             ...value,
             tmpFilePath,
             cleanupCallback,
-          })
-        )
+          });
+        })
         .catch(reject);
     });
   });
 }
 
-type Sheet = {
+interface Sheet {
   sheet: WorkSheet;
   entry: Entry;
-};
+}
 
-type DeferredSheet = {
+interface DeferredSheet {
   sheet: DeferredWorkSheet;
-};
+}
 
 export type WorkSheetStream = Sheet | DeferredSheet;
 

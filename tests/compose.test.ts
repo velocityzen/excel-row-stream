@@ -1,20 +1,21 @@
 import { createReadStream } from "fs";
-import { Writable, Transform } from "stream";
+import { Transform, Writable } from "stream";
 import { pipeline } from "stream/promises";
+import { describe, expect, test } from "vitest";
 
 import createExcelParserStream, {
-  createRowToRowWithColumnsStream,
   createRowToRowAsObjectStream,
+  createRowToRowWithColumnsStream,
   createThrowIfEmptyStream,
+  RowAsObject,
   RowWithColumns,
   RowWithValues,
-  RowAsObject,
 } from "../lib";
 
 describe("Compose stream", () => {
   test("row has columns", async () => {
     const fileStream = createReadStream(
-      "./tests/fixtures/predefined_formats.xlsx"
+      "./tests/fixtures/predefined_formats.xlsx",
     );
     const parserStream = createExcelParserStream({
       matchSheet: /.*/,
@@ -42,7 +43,7 @@ describe("Compose stream", () => {
 
   test("row has sanitized columns", async () => {
     const fileStream = createReadStream(
-      "./tests/fixtures/predefined_formats.xlsx"
+      "./tests/fixtures/predefined_formats.xlsx",
     );
     const parserStream = createExcelParserStream({
       matchSheet: /.*/,
@@ -61,7 +62,7 @@ describe("Compose stream", () => {
 
         if (row.index === 2) {
           expect(row.columns.nome).toBe("jhon");
-          expect(row.columns["data_di_nascita"]).toBe("9/27/86");
+          expect(row.columns.data_di_nascita).toBe("9/27/86");
         }
 
         callback();
@@ -73,7 +74,7 @@ describe("Compose stream", () => {
 
   test("row as values object", async () => {
     const fileStream = createReadStream(
-      "./tests/fixtures/predefined_formats.xlsx"
+      "./tests/fixtures/predefined_formats.xlsx",
     );
     const parserStream = createExcelParserStream({
       matchSheet: /.*/,
@@ -95,7 +96,7 @@ describe("Compose stream", () => {
 
   test("row as columns object", async () => {
     const fileStream = createReadStream(
-      "./tests/fixtures/predefined_formats.xlsx"
+      "./tests/fixtures/predefined_formats.xlsx",
     );
     const parserStream = createExcelParserStream({
       matchSheet: /.*/,
@@ -116,7 +117,7 @@ describe("Compose stream", () => {
         expect(row.index).toBeUndefined();
         if (index === 1) {
           expect(row.nome).toBe("jhon");
-          expect(row["data_di_nascita"]).toBe("9/27/86");
+          expect(row.data_di_nascita).toBe("9/27/86");
         }
         index++;
         callback();
@@ -128,13 +129,13 @@ describe("Compose stream", () => {
       parserStream,
       withColumnsStream,
       asObjectsStream,
-      resultStream
+      resultStream,
     );
   });
 
   test("throw if no data", async () => {
     const fileStream = createReadStream(
-      "./tests/fixtures/predefined_formats.xlsx"
+      "./tests/fixtures/predefined_formats.xlsx",
     );
     const parserStream = createExcelParserStream({
       matchSheet: /.*/,
@@ -155,7 +156,7 @@ describe("Compose stream", () => {
 
     try {
       await pipeline(fileStream, parserStream, filterStream, throwIfError);
-      fail();
+      throw Error("Failed to fail");
     } catch (e) {
       expect((e as Error).message === "Can not believe it");
     }

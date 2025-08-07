@@ -7,7 +7,7 @@ interface FixStylesOptions {
 
 export function fixStyles(
   styles: WorkBookStyles,
-  { addSecondsToCustomTimeFormat }: FixStylesOptions
+  { addSecondsToCustomTimeFormat }: FixStylesOptions,
 ): WorkBookStyles {
   if (addSecondsToCustomTimeFormat && styles.hasFormatCodes) {
     styles.formatCodes = Object.entries(styles.formatCodes).reduce<
@@ -47,8 +47,9 @@ export function dropEmptyValues({
 
 export async function asyncIterate<T>(
   arr: T[],
-  fn: (i: T) => Promise<void>
+  fn: (i: T) => Promise<void>,
 ): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   for await (const el of arr) {
     await fn(el);
   }
@@ -82,8 +83,8 @@ export function getColumnIndex(columnName: string): number {
 export function safeInsertAt<V>(
   index: number,
   value: V,
-  arr: Array<null | V>
-): Array<null | V> {
+  arr: (null | V)[],
+): (null | V)[] {
   for (let i = arr.length; i < index; i++) {
     if (arr[i] === undefined) {
       arr[i] = null;
@@ -91,4 +92,12 @@ export function safeInsertAt<V>(
   }
   arr[index] = value;
   return arr;
+}
+
+export function toError(e: unknown): Error {
+  try {
+    return e instanceof Error ? e : new Error(String(e));
+  } catch (cause) {
+    return Error("Failed", { cause });
+  }
 }

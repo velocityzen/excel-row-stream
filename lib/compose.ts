@@ -16,7 +16,9 @@ export function createRowToRowWithColumnsStream({
     transform({ index, values }: RowWithValues, _encoding, callback) {
       if (index === 1) {
         columnNames = values.map((value) =>
-          sanitizeColumnName ? sanitizeColumnName(String(value)) : String(value)
+          sanitizeColumnName
+            ? sanitizeColumnName(String(value))
+            : String(value),
         );
 
         callback();
@@ -28,7 +30,7 @@ export function createRowToRowWithColumnsStream({
           rowData[columnNames[column]] = value;
           return rowData;
         },
-        {}
+        {},
       );
 
       callback(null, {
@@ -44,7 +46,8 @@ export function createRowToRowAsObjectStream() {
     objectMode: true,
     transform(row: RowWithValues | RowWithColumns, _encoding, callback) {
       if ("values" in row) {
-        return callback(null, row.values);
+        callback(null, row.values);
+        return;
       }
 
       callback(null, row.columns);

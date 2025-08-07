@@ -1,7 +1,7 @@
 import type { Readable } from "stream";
 import { pipeline } from "stream/promises";
 import type { Entry } from "unzipper";
-import { WritableStream } from "htmlparser2/lib/WritableStream";
+import { WritableStream } from "htmlparser2/WritableStream";
 
 import {
   XmlNode,
@@ -17,7 +17,7 @@ import {
 } from "./types";
 
 export async function parseWorkBookInfo(
-  entry: Entry
+  entry: Entry,
 ): Promise<EntryParserResultInfo> {
   const workBookInfo: WorkBookInfo = {
     sheetRelationshipsNames: {},
@@ -37,7 +37,7 @@ export async function parseWorkBookInfo(
 }
 
 export async function parseWorkBookRels(
-  entry: Entry
+  entry: Entry,
 ): Promise<EntryParserResultRels> {
   const workBookRels: WorkBookRels = {
     sheetRelationships: {},
@@ -54,7 +54,7 @@ export async function parseWorkBookRels(
 }
 
 export async function parseWorkBookStyles(
-  entry: Entry
+  entry: Entry,
 ): Promise<EntryParserResultStyles> {
   const styles: WorkBookStyles = {
     hasFormatCodes: false,
@@ -94,7 +94,7 @@ export async function parseWorkBookStyles(
 }
 
 export async function parseWorkBookSharedStrings(
-  entry: Entry
+  entry: Entry,
 ): Promise<EntryParserResultSharedStrings> {
   const workBookSharedStrings: WorkBookSharedStrings = [];
 
@@ -130,7 +130,7 @@ export async function parseWorkBookSharedStrings(
 
 export async function parseXml(
   stream: Readable,
-  nodeMapFn: (node: XmlNode) => void
+  nodeMapFn: (node: XmlNode) => void,
 ) {
   const nodeStack: XmlNode[] = [];
 
@@ -159,7 +159,7 @@ export async function parseXml(
         nodeMapFn(node);
       },
     },
-    { decodeEntities: true, xmlMode: true }
+    { decodeEntities: true, xmlMode: true },
   );
 
   await pipeline(stream, parser);

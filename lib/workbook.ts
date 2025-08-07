@@ -26,9 +26,15 @@ import {
   getSheetStream,
   WorkSheetStream,
 } from "./deferred";
-import { isEmpyRow, dropEmptyValues, asyncIterate, fixStyles } from "./helpers";
+import {
+  isEmpyRow,
+  dropEmptyValues,
+  asyncIterate,
+  fixStyles,
+  toError,
+} from "./helpers";
 
-const entryMatch: Map<RegExp, EntryType> = new Map([
+const entryMatch = new Map<RegExp, EntryType>([
   [/^xl\/workbook\.xml/, EntryType.Info],
   [/^xl\/_rels\/workbook\.xml\.rels/, EntryType.Rels],
   [/^xl\/sharedStrings\.xml/, EntryType.SharedStrings],
@@ -122,10 +128,10 @@ export default function createExcelWorkbookStream({
   function finish() {
     if (deferredSheets.length > 0) {
       asyncIterate(deferredSheets, (deferredSheet) =>
-        streamWorkSheet({ sheet: deferredSheet })
+        streamWorkSheet({ sheet: deferredSheet }),
       )
         .then(() => stream.push(null))
-        .catch((error: Error) => stream.destroy(error));
+        .catch((error: unknown) => stream.destroy(toError(error)));
 
       return;
     }
@@ -169,6 +175,7 @@ export default function createExcelWorkbookStream({
             case EntryType.Sheet:
               isProcessingSheet = true;
 
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               if (!info || !rels || !styles || !sharedStrings) {
                 const deferredSheet = await deferSheet(entry, result.value);
                 deferredSheets.push(deferredSheet);
@@ -187,7 +194,7 @@ export default function createExcelWorkbookStream({
             finish();
           }
         })
-        .catch((error: Error) => stream.destroy(error));
+        .catch((error: unknown) => stream.destroy(toError(error)));
     });
 
   const stream = new Duplex({

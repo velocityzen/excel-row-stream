@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { parseExcelRows } from "../lib";
 
 describe("Excel parser stream", () => {
@@ -65,15 +66,15 @@ describe("Excel parser stream", () => {
         file: "./tests/fixtures/notanxlsx",
         matchSheet: /.*/,
         onRow: () => {
-          fail();
+          throw Error("Failed to fail");
         },
       });
-      fail();
+      throw Error("Failed to fail");
     } catch (error) {
       if (error instanceof Error) {
         expect(error.message).toBe("invalid signature: 0x6d612069");
       } else {
-        fail();
+        throw Error("Failed to fail");
       }
     }
   });
