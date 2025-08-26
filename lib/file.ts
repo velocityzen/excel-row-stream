@@ -1,9 +1,8 @@
 import { createReadStream } from "fs";
 import { Writable } from "stream";
 import { pipeline } from "stream/promises";
-
+import type { RowWithValues, WorkbookStreamOptions } from "./types";
 import createExcelWorkbookStream from "./workbook";
-import type { WorkbookStreamOptions, RowWithValues } from "./types";
 
 interface ParseExcelRowsOptions extends WorkbookStreamOptions {
   file: string;

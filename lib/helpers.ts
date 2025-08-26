@@ -1,5 +1,5 @@
-import { reduceRight } from "fp-ts/Array";
-import { WorkBookStyles, RowWithValues } from "./types";
+import { reduceRight } from "fp-ts/lib/Array";
+import { RowWithValues, WorkBookStyles } from "./types";
 
 interface FixStylesOptions {
   addSecondsToCustomTimeFormat: boolean;

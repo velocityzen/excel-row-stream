@@ -1,9 +1,8 @@
 import fs from "fs";
 import { pipeline } from "stream/promises";
-import { Entry } from "unzipper";
 import tmp from "tmp";
-
-import { WorkSheet, DeferredWorkSheet } from "./types";
+import { Entry } from "unzipper";
+import { DeferredWorkSheet, WorkSheet } from "./types";
 
 export async function deferSheet(
   entry: Entry,

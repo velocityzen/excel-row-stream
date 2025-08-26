@@ -1,5 +1,4 @@
 import { Transform } from "stream";
-
 import { RowWithValues, RowWithColumns } from "./types";
 
 export interface CreateRowToRowWithColumnsStreamOptions {

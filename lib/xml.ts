@@ -1,19 +1,18 @@
+import { WritableStream } from "htmlparser2/WritableStream";
 import type { Readable } from "stream";
 import { pipeline } from "stream/promises";
 import type { Entry } from "unzipper";
-import { WritableStream } from "htmlparser2/WritableStream";
-
 import {
-  XmlNode,
+  EntryParserResultInfo,
+  EntryParserResultRels,
+  EntryParserResultSharedStrings,
+  EntryParserResultStyles,
   EntryType,
   WorkBookInfo,
-  EntryParserResultInfo,
   WorkBookRels,
-  EntryParserResultRels,
-  WorkBookStyles,
-  EntryParserResultStyles,
   WorkBookSharedStrings,
-  EntryParserResultSharedStrings,
+  WorkBookStyles,
+  XmlNode,
 } from "./types";
 
 export async function parseWorkBookInfo(
