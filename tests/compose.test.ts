@@ -3,7 +3,8 @@ import { Transform, Writable } from "stream";
 import { pipeline } from "stream/promises";
 import { describe, expect, test } from "vitest";
 
-import createExcelParserStream, {
+import {
+  createExcelParserStream,
   createRowToRowAsObjectStream,
   createRowToRowWithColumnsStream,
   createThrowIfEmptyStream,

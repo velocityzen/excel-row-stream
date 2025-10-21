@@ -8,7 +8,7 @@ export type {
   WorkbookStreamOptions,
 } from "./types";
 
-export default function createExcelParserStream(opts: WorkbookStreamOptions) {
+export function createExcelParserStream(opts: WorkbookStreamOptions) {
   return createExcelWorkbookStream(opts);
 }
 
